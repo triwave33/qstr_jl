@@ -1,9 +1,9 @@
 module qstr_util 
 
-    export timeevent, predicate, sentence # struct
+    export timeevent, predicate, triple # struct
     export p,m,o,s,d,s_i,eq,f,d_i,s_i,o_i,m_i,p_i # predicate
     export rel_dict, composition_table, abbrev_dict, inverse_dict # variables (dictionaries)
-    export relation, inverse, compose # function
+    export relation, inverse, make_triple, compose # function
 
 ########### struct ###########
     struct timeevent
@@ -15,21 +15,22 @@ module qstr_util
         val::String
     end
 
-    struct sentence
+    struct triple
         s::timeevent
-        p::predicate
+        p::String  # not using predicate
         o::timeevent
+        #d = Dict([("s",s),("p",p),("o",o)])
+        #return d
     end
-        
-    
+
 ########### predicate instances #############
 # allen's time calculus
 p = predicate("p")
 m = predicate("m")
 o = predicate("o")
 s = predicate("s")
-d = predicate("s")
-s_i = predicate("si")
+d = predicate("d")
+f_i = predicate("fi")
 eq = predicate("eq")
 f = predicate("f")
 d_i = predicate("di")
@@ -63,10 +64,14 @@ p_i = predicate("pi")
       "[p,di]" "[s,si]" "[d,oi]" "[d,oi]" "[d,oi]" "mi" "mi" "mi" "pi" "pi" "pi" "pi" "pi";
       "[p,pi]" "[d,pi]" "[d,pi]" "[d,pi]" "[d,pi]" "pi" "pi" "pi" "pi" "pi" "pi" "pi" "pi"
       ]
-    
+
+  
     # map from abbreviated notation to multi relations in cmposition table
     abbrev_dict =
-        Dict([("[p,o]", ["p","m","o"]),("[di,oi]", ["d","f","o"]),
+        Dict([("p","p"),("m","m"),("o","o"),("s","s"),("d","d"),
+              ("fi","fi"),("eq","eq"),("f","f"),("di","di"),("si","si"),
+              ("oi","oi"),("mi","mi"),("pi","pi"),
+              ("[p,o]", ["p","m","o"]),("[di,oi]", ["d","f","o"]),
               ("[o,oi]",["o","s","d","fi","eq","f","di","si","oi"]),
               ("[oi,pi]", ["oi","mi","pi"]),
               ("[p,d]",["p","m","o","s","d"]),
@@ -85,7 +90,7 @@ p_i = predicate("pi")
         Dict([("p","pi"),("m","mi"),("o","oi"),("s","si"),("d","di"),("fi","f"),("eq","eq"),
       ("f","fi"),("di","d"),("si","s"),("oi","o"),("mi","m"),("pi","p")])
 
-################## funvcion ####################
+################## function ####################
     function relation(X::timeevent, Y::timeevent)
       if (X.sp == Y.sp && X.ep == Y.ep)
         return "eq"
@@ -120,11 +125,18 @@ p_i = predicate("pi")
     end
     
     function inverse(rel)
+      #input
       return inverse_dict[rel]
     end
+
+    function make_triple(te1, te2)
+      #input 
+      # te1: timeevent1, te2: timeevent2
+      return triple(te1, relation(te1, te2), te2)
+    end
     
-    function compose(rel1, rel2)
-      return composition_table[rel_dict[rel1], rel_dict[rel2]]
+    function compose(p1, p2)
+      return abbrev_dict[composition_table[rel_dict[p1], rel_dict[p2]]]
     end
 end # module end 
 
@@ -145,7 +157,9 @@ eveH = timeevent(30,40)
 println("######## test suite ##########")
 println("relAB should be 'm'")
 @printf("relAB: %s", relation(eveA, eveB))
-println("now create sentence")
-sentence(eveA, relation(eveA), eve(B))
+println()
+println("now create triple")
+sAB = triple(eveA, relation(eveA, eveB), eveB)
+sBC = triple(eveB, relation(eveB, eveC), eveC)
 
 
