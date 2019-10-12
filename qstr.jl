@@ -1,7 +1,6 @@
 module qstr_util 
 
-    export timeevent, predicate, triple # struct
-    export p,m,o,s,d,s_i,eq,f,d_i,s_i,o_i,m_i,p_i # predicate
+    export timeevent, triple # struct
     export rel_dict, composition_table, abbrev_dict, inverse_dict # variables (dictionaries)
     export relation, inverse, make_triple, compose # function
 
@@ -11,34 +10,13 @@ module qstr_util
         ep::Float64
     end
 
-    struct predicate
-        val::String
-    end
-
     struct triple
         s::timeevent
-        p::String  # not using predicate
+        p::String  
         o::timeevent
         #d = Dict([("s",s),("p",p),("o",o)])
         #return d
     end
-
-########### predicate instances #############
-# allen's time calculus
-p = predicate("p")
-m = predicate("m")
-o = predicate("o")
-s = predicate("s")
-d = predicate("d")
-f_i = predicate("fi")
-eq = predicate("eq")
-f = predicate("f")
-d_i = predicate("di")
-s_i = predicate("si")
-o_i = predicate("oi")
-m_i = predicate("mi")
-p_i = predicate("pi")
-
 
 
 ########### variables ################
