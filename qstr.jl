@@ -12,7 +12,7 @@ module qstr_util
 
     struct triple
         s::timeevent
-        p::String  
+        p::Array{String}
         o::timeevent
         #d = Dict([("s",s),("p",p),("o",o)])
         #return d
@@ -21,7 +21,7 @@ module qstr_util
 
 ########### variables ################
 
-    # map from relation to index number
+    # map from relation (aka predicate)  to index number
     rel_dict = Dict([("p",1),("m",2),("o",3),("s",4),("d",5),
                      ("fi",6),("eq",7),("f",8),("di",9),("si",10),
                      ("oi",11),("mi",12),("pi",13)])
@@ -44,11 +44,11 @@ module qstr_util
       ]
 
   
-    # map from abbreviated notation to multi relations in cmposition table
+    # map from abbreviated notation to multi relations in composition table
     abbrev_dict =
-        Dict([("p","p"),("m","m"),("o","o"),("s","s"),("d","d"),
-              ("fi","fi"),("eq","eq"),("f","f"),("di","di"),("si","si"),
-              ("oi","oi"),("mi","mi"),("pi","pi"),
+        Dict([("p",["p"]),("m",["m"]),("o",["o"]),("s",["s"]),("d",["d"]),
+              ("fi",["fi"]),("eq",["eq"]),("f",["f"]),("di",["di"]),("si",["si"]),
+              ("oi",["oi"]),("mi",["mi"]),("pi",["pi"]),
               ("[p,o]", ["p","m","o"]),("[di,oi]", ["d","f","o"]),
               ("[o,oi]",["o","s","d","fi","eq","f","di","si","oi"]),
               ("[oi,pi]", ["oi","mi","pi"]),
@@ -63,7 +63,8 @@ module qstr_util
               ("[o,di]",["o","fi","di"]),
               ("[di,oi]",["di","si","oi"])
               ])
-    
+
+    # simple mapping to inverse function
     inverse_dict = 
         Dict([("p","pi"),("m","mi"),("o","oi"),("s","si"),("d","di"),("fi","f"),("eq","eq"),
       ("f","fi"),("di","d"),("si","s"),("oi","o"),("mi","m"),("pi","p")])
@@ -71,34 +72,34 @@ module qstr_util
 ################## function ####################
     function relation(X::timeevent, Y::timeevent)
       if (X.sp == Y.sp && X.ep == Y.ep)
-        return "eq"
+        return ["eq"]
       elseif (X.sp < X.ep < Y.sp < Y.ep)
-        return "p"
+        return ["p"]
       elseif (X.sp < X.ep == Y.sp < Y.ep)
-        return "m"
+        return ["m"]
       elseif (X.sp < Y.sp < X.ep < Y.ep)
-        return "o"
+        return ["o"]
       elseif (X.sp == Y.sp <  X.ep <Y.ep)
-        return "s"
+        return ["s"]
       elseif (Y.sp < X.sp < X.ep < Y.ep)
-        return "d"
+        return ["d"]
       elseif (Y.sp < X.sp < X.ep == Y.ep)
-        return "f"
+        return ["f"]
       # inverse
       elseif (X.sp < X.ep < Y.sp < Y.ep)
-        return "pi"
+        return ["pi"]
       elseif (Y.sp < Y.ep == X.sp < X.ep)
-        return "mi"
+        return ["mi"]
       elseif (Y.sp < X.sp < Y.ep < X.ep)
-        return "oi"
+        return ["oi"]
       elseif (Y.sp == X.sp < Y.ep < X.ep)
-        return "si"
+        return ["si"]
       elseif (X.sp < Y.sp < Y.ep < X.ep)
-        return "di"
+        return ["di"]
       elseif (X.sp < Y.sp < Y.ep == X.ep)
-        return "fi"
+        return ["fi"]
       else
-        return "other"
+        return ["other"]
       end
     end
     
@@ -113,7 +114,7 @@ module qstr_util
       return triple(te1, relation(te1, te2), te2)
     end
     
-    function compose(p1, p2)
+    function compose(p1::String, p2::String)
       return abbrev_dict[composition_table[rel_dict[p1], rel_dict[p2]]]
     end
 end # module end 
@@ -133,11 +134,22 @@ eveG = timeevent(10,30)
 eveH = timeevent(30,40)
 
 println("######## test suite ##########")
-println("relAB should be 'm'")
-@printf("relAB: %s", relation(eveA, eveB))
+println("relation between eventA and eventB should be 'm'")
+tAB = make_triple(eveA, eveB)  # make triple <s, p, o>
+@printf("relAB: %s", tAB.p)
 println()
-println("now create triple")
-sAB = triple(eveA, relation(eveA, eveB), eveB)
-sBC = triple(eveB, relation(eveB, eveC), eveC)
+println("OK")
+println()
+
+println("relation between eventB and eventC should be 'mi'")
+tBC = make_triple(eveB, eveC)  # make triple <s, p, o>
+@printf("relBC: %s", tBC.p)
+println()
+println("OK")
+println()
+println("Now calculating composition relAC =  relAB -> relBC")
+tAC = triple(eveA, compose(tAB.p[1], tBC.p[1]), eveC)
+@printf("relAC: %s", tAC.p) 
+
 
 
