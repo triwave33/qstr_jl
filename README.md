@@ -30,4 +30,28 @@ for graphical explanation see https://en.wikipedia.org/wiki/Allen%27s_interval_a
 
 ## Composition (transition) of relations
 
-The merit
+The merit of QSTR is "deducing (or entailing) relations which does not explicitly indicated by observed time events. In other words, we can get more information than time events which are directly observed.
+
+The simplest way is "precedes" of "precedes" is "precedes". Supposed that we obtained data (relation between two time-events) for event A and B described below.
+
+- relation(A, B) => "precedes"
+- relation(B, C) => "precedes"
+
+Intutively, we can deduce relation(A,C) => "precedes". And this turn to be correct when considering specific values for A,B and C. 
+  e.g. A(10,20), B(30,40), C(55, 70)
+
+This kind of composition (transition) rule is also extended other 12 relations. Compositions from 13 relations to (other) 13 relations are examined. And results are known as composition table (13x13 matrix correspongs rel1->rel2)
+
+NOTE: Trainsitive relation from rel1 to rel2 is not always determined as an unique relation. For example, 
+relation(A,B) => 'precedes' (B occurs after A occurs)
+relation(B,C) => 'during' (B occurs during C occurs)
+
+In this case, relation(A,C) may be 'precedes' or 'meets' or 'overlaps' or 'starts' or 'during'. We have to get further informtion if we want to know relation(A,C) in detail.
+
+  
+### so what?
+
+Now we understand the concept. But what for does qstr exist? or what is the merit of qstr? Sometimes we can get more information from two relations. But so what? The examples above are too simple. The merits are
+
+
+
