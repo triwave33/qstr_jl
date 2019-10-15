@@ -30,7 +30,7 @@ module qstr_util
       "p" "p" "p" "m" "[o,d]" "p" "m" "[o,d]" "p" "m" "[o,d]" "[fi,f]" "[di,pi]";
       "p" "p" "[p,o]" "o" "[o,d]" "[p,o]" "o" "[o,d]" "[p,di]" "[o,di]" "[o,oi]" "[di,oi]" "[di,pi]";
       "p" "p" "[p,o]" "s" "d" "[p,o]" "s" "d" "[p,di]" "[s,si]" "[d,oi]" "mi" "pi";
-      "p" "p" "[p,d]" "d" "d" "[p,d]" "d" "d" "1" "[d,pi]" "[d,pi]" "pi" "pi";
+      "p" "p" "[p,d]" "d" "d" "[p,d]" "d" "d" "[p,pi]" "[d,pi]" "[d,pi]" "pi" "pi";
       "p" "m" "o" "o" "[o,d]" "fi" "fi" "[fi,f]" "di" "di" "[di,oi]" "[di,oi]" "[di,pi]";
       "p" "m" "o" "s" "d" "fi" "eq" "f" "di" "si" "oi" "mi" "pi";
       "p" "m" "[o,d]" "d" "d" "[fi,f]" "f" "f" "[di,pi]" "[oi,pi]" "[oi,pi]" "pi" "pi";
@@ -47,12 +47,12 @@ module qstr_util
         Dict([("p",["p"]),("m",["m"]),("o",["o"]),("s",["s"]),("d",["d"]),
               ("fi",["fi"]),("eq",["eq"]),("f",["f"]),("di",["di"]),("si",["si"]),
               ("oi",["oi"]),("mi",["mi"]),("pi",["pi"]),
-              ("[p,o]", ["p","m","o"]),("[di,oi]", ["d","f","o"]),
+              ("[p,o]", ["p","m","o"]),("[d,oi]", ["d","f","oi"]),
               ("[o,oi]",["o","s","d","fi","eq","f","di","si","oi"]),
               ("[oi,pi]", ["oi","mi","pi"]),
               ("[p,d]",["p","m","o","s","d"]),
               ("[d,pi]",["d","f","oi","mi","pi"]),
-              ("[o,d]",["O","s","d"]),
+              ("[o,d]",["o","s","d"]),
               ("[fi,f]",["fi","eq","f"]),
               ("[p,di]",["p","m","o","fi","di"]),
               ("[s,si]",["s","eq","si"]),
@@ -157,5 +157,6 @@ for pair_1 in rel_dict
     @printf("%s & %s => %s", pair_1[1], pair_2[1], compose_rel)
     println()
   end
+  println()
 end
 
