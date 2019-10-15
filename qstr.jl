@@ -11,11 +11,9 @@ module qstr_util
     end
 
     struct triple
-        s::timeevent
-        p::Array{String}
-        o::timeevent
-        #d = Dict([("s",s),("p",p),("o",o)])
-        #return d
+        s::timeevent      # subject
+        p::Array{String}  # predicate
+        o::timeevent      # object
     end
 
 
@@ -150,6 +148,14 @@ println()
 println("Now calculating composition relAC =  relAB -> relBC")
 tAC = triple(eveA, compose(tAB.p[1], tBC.p[1]), eveC)
 @printf("relAC: %s", tAC.p) 
+println()
 
-
+println("####### OVERALL TEST ##########")
+for pair_1 in rel_dict
+  for pair_2 in rel_dict
+    compose_rel = abbrev_dict[composition_table[rel_dict[pair_1[1]], rel_dict[pair_2[1]]]]
+    @printf("%s & %s => %s", pair_1[1], pair_2[1], compose_rel)
+    println()
+  end
+end
 
